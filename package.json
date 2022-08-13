@@ -1,0 +1,13 @@
+{
+  "name": "js13kGames-2022",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tbroadley/js13kGames-2022.git",
+  "author": "Thomas Broadley <buriedunderbooks@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "prettier": "^2.7.1",
+    "pretty-quick": "^3.1.3"
+  }
+}
