@@ -16,20 +16,22 @@ let score = 0;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction) {
-    super(startingPos, vec2(2, 2), 16, vec2(16, 16));
-    this.velocity = vec2(0, 0.1).rotate(90 * direction);
+    super(startingPos, vec2(16, 16), 16, vec2(16, 16));
+    this.velocity = vec2(0, 1).rotate(90 * direction);
     this.damping = 1;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit() {
-  canvasFixedSize = vec2(640, 480);
-  mainCanvasSize = vec2(640, 480);
+  mainCanvasSize = canvasFixedSize = vec2(640, 480);
 
-  deathCursor = new EngineObject(mousePos, vec2(4, 4), 0, vec2(32, 32));
+  cameraPos = vec2(320, 240);
+  cameraScale = 1;
 
-  souls.push(new SoulObject(vec2(0, -10), 0));
+  deathCursor = new EngineObject(mousePos, vec2(32, 32), 2, vec2(32, 32));
+
+  souls.push(new SoulObject(vec2(100, 0), 0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
