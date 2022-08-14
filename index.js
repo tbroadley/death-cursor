@@ -21,8 +21,9 @@ let gameOver = false;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
-    super(startingPos, vec2(32, 32), 32, vec2(16, 16));
+    super(startingPos, vec2(20, 16), 64, vec2(10, 8));
     this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
+    this.damping = 1;
   }
 }
 
@@ -30,7 +31,7 @@ class AngelObject extends EngineObject {
   targetSoul = null;
 
   constructor(position) {
-    super(position, vec2(64, 64), 6, vec2(32, 32));
+    super(position, vec2(40, 64), 6, vec2(20, 32));
     this.setCollision(1, 1, 1);
   }
 }
@@ -50,7 +51,7 @@ function gameInit() {
 
   objectMaxSpeed = 20;
 
-  death = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
+  death = new EngineObject(mousePos, vec2(40, 64), 2, vec2(20, 32));
 
   angels.push(new AngelObject(vec2(640 - 100, 480 - 100)));
 }
