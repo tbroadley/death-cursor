@@ -9,13 +9,13 @@
 
 // game variables
 let death;
-
 let angel;
 
+let souls = [];
 let lastSoulAddedAt = 0;
 
-let souls = [];
 let score = 0;
+let gameOver = false;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
@@ -54,7 +54,13 @@ function gameInit() {
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdate() {
-  death.velocity = mousePos.subtract(death.pos);
+  if (gameOver) {
+    return;
+  }
+
+  if (mousePosScreen.x) {
+    death.velocity = mousePos.subtract(death.pos);
+  }
 
   if (!angel.targetSoul && souls.length > 0) {
     // Go for the closest soul
@@ -94,7 +100,15 @@ function gameUpdate() {
     }
 
     if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
-      paused = true;
+      gameOver = true;
+
+      death.velocity = vec2(0, 0);
+      angel.velocity = vec2(0, 0);
+
+      for (const soul of souls) {
+        soul.destroy();
+      }
+      souls = [];
     }
 
     if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
@@ -156,7 +170,11 @@ function gameRender() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameRenderPost() {
-  drawTextScreen(`Score: ${score}`, vec2(600, 400), 12);
+  if (gameOver) {
+    drawTextScreen(`Game over.\nFinal score: ${score}`, vec2(600, 400), 12);
+  } else {
+    drawTextScreen(`Score: ${score}`, vec2(600, 400), 12);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
