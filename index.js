@@ -44,9 +44,11 @@ class AngelObject extends EngineObject {
   }
 }
 
-function clearAngelTargetSouls() {
+function clearAngelTargetSouls(soul) {
   for (const angel of angels) {
-    angel.targetSoul = null;
+    if (angel.targetSoul === soul) {
+      angel.targetSoul = null;
+    }
   }
 }
 
@@ -137,7 +139,7 @@ function gameUpdate() {
       soul.destroy();
       soulsToRemove.add(soul);
 
-      clearAngelTargetSouls();
+      clearAngelTargetSouls(soul);
 
       score += 10;
     }
@@ -147,7 +149,7 @@ function gameUpdate() {
         soul.destroy();
         soulsToRemove.add(soul);
 
-        clearAngelTargetSouls();
+        clearAngelTargetSouls(soul);
       }
 
       if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
