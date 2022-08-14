@@ -16,9 +16,10 @@ let souls = [];
 let score = 0;
 
 class SoulObject extends EngineObject {
-  constructor(startingPos, direction) {
+  constructor(startingPos, direction, speed) {
     super(startingPos, vec2(32, 32), 16, vec2(16, 16));
-    this.velocity = vec2(0, 1).rotate((Math.PI / 2) * direction);
+    this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
+    console.log(this.velocity);
     this.damping = 1;
   }
 }
@@ -29,6 +30,8 @@ function gameInit() {
 
   cameraPos = vec2(320, 240);
   cameraScale = 1;
+
+  objectMaxSpeed = 5;
 
   deathCursor = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
 }
@@ -81,7 +84,10 @@ function gameUpdate() {
         console.error(`Wasn't expecting ${direction}`);
     }
 
-    souls.push(new SoulObject(position, direction));
+    const speed = 2 + (clamp(time, 0, 60) / 60) * 3;
+    console.log(speed);
+
+    souls.push(new SoulObject(position, direction, speed));
 
     lastSoulAddedAt = time;
   }
