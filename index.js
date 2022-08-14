@@ -9,6 +9,7 @@
 
 // game variables
 let deathCursor;
+let lastMousePos;
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit() {
@@ -20,15 +21,27 @@ function gameInit() {
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdate() {
   if (mousePosScreen.x) deathCursor.pos = mousePos;
+
+  if (lastMousePos) {
+    const mouseMovement = mousePos.subtract(lastMousePos);
+
+    console.log(mouseMovement.length());
+
+    if (mouseMovement.length() < 0.1) {
+      deathCursor.tileIndex = 2;
+    } else {
+      deathCursor.tileIndex = mouseMovement.direction();
+    }
+  }
+
+  lastMousePos = mousePos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdatePost() {}
 
 ///////////////////////////////////////////////////////////////////////////////
-function gameRender() {
-  console.log(engineObjects);
-}
+function gameRender() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameRenderPost() {}
