@@ -286,7 +286,7 @@ function gameUpdate() {
     }
   }
 
-  const soulAddInterval = 0.5 - (clamp(relativeTime, 0, 60) / 60) * 0.25;
+  const soulAddInterval = 1 / angels.length;
 
   if (souls.length === 0 || relativeTime - lastSoulAddedAt > soulAddInterval) {
     let position;
