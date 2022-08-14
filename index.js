@@ -10,6 +10,7 @@
 // game variables
 let deathCursor;
 let lastMousePos;
+let lastSoulAddedAt = 0;
 
 let souls = [];
 let score = 0;
@@ -30,8 +31,6 @@ function gameInit() {
   cameraScale = 1;
 
   deathCursor = new EngineObject(mousePos, vec2(32, 32), 2, vec2(32, 32));
-
-  souls.push(new SoulObject(vec2(100, 0), 0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,6 +59,12 @@ function gameUpdate() {
   }
 
   lastMousePos = mousePos;
+
+  if (time - lastSoulAddedAt > 1) {
+    souls.push(new SoulObject(vec2(randInt(0, 640 - 16), 0), 0));
+
+    lastSoulAddedAt = time;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
