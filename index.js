@@ -17,8 +17,8 @@ let score = 0;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction) {
-    super(startingPos, vec2(16, 16), 16, vec2(16, 16));
-    this.velocity = vec2(0, 1).rotate(90 * direction);
+    super(startingPos, vec2(32, 32), 16, vec2(16, 16));
+    this.velocity = vec2(0, 1).rotate((Math.PI / 2) * direction);
     this.damping = 1;
   }
 }
@@ -30,7 +30,7 @@ function gameInit() {
   cameraPos = vec2(320, 240);
   cameraScale = 1;
 
-  deathCursor = new EngineObject(mousePos, vec2(32, 32), 2, vec2(32, 32));
+  deathCursor = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,27 @@ function gameUpdate() {
   lastMousePos = mousePos;
 
   if (time - lastSoulAddedAt > 1) {
-    souls.push(new SoulObject(vec2(randInt(0, 640 - 16), 0), 0));
+    let position;
+
+    const direction = randInt(0, 4);
+    switch (direction) {
+      case 0:
+        position = vec2(randInt(0, 640 - 16), 0);
+        break;
+      case 1:
+        position = vec2(640, randInt(0, 480 - 16));
+        break;
+      case 2:
+        position = vec2(randInt(0, 640 - 16), 480);
+        break;
+      case 3:
+        position = vec2(0, randInt(0, 480 - 16));
+        break;
+      default:
+        console.error(`Wasn't expecting ${direction}`);
+    }
+
+    souls.push(new SoulObject(position, direction));
 
     lastSoulAddedAt = time;
   }
