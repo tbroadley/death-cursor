@@ -391,10 +391,13 @@ function gameRenderPost() {
        * Death Cursor
        * Soulcycle(tm)
        * The Bad Place
+       * Reaper-off
+       * Reap or Sow
+       * Cursor of Death
        */
-      drawTextScreen("Game name TBD", vec2(320, 180), 24);
+      drawTextScreen("Death Cursor", vec2(320, 180), 24);
       drawTextScreen(
-        `You are Death.\nCollect souls before the angels do. Don't run into the angels.\nClick anywhere to begin.`,
+        `You are Death.\nUse your mouse to collect souls before the angels do.\nDon't touch the angels.\nClick anywhere to begin.`,
         vec2(320, 300),
         12
       );
@@ -402,7 +405,7 @@ function gameRenderPost() {
       break;
     case State.GAME:
       drawTextScreen(
-        `Score: ${score}`,
+        `Score: ${score}\nHigh score: ${localStorage.tbroadleyJs13kGamesHighScore}`,
         vec2(610, 450),
         12,
         new Color(1, 1, 1),
