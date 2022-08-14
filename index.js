@@ -16,8 +16,16 @@ let lastAngelAddedAt = 0;
 let souls = [];
 let lastSoulAddedAt = 0;
 
+let lastRoundStartedAt = 0;
+
 let score = 0;
-let gameOver = false;
+
+const State = {
+  START_MENU: "START_MENU",
+  GAME: "GAME",
+  GAME_OVER_MENU: "GAME_OVER_MENU",
+};
+let state = State.START_MENU;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
@@ -51,16 +59,43 @@ function gameInit() {
 
   objectMaxSpeed = 20;
 
-  death = new EngineObject(mousePos, vec2(40, 64), 2, vec2(20, 32));
-
-  angels.push(new AngelObject(vec2(640 - 100, 480 - 100)));
+  death = new EngineObject(vec2(320, 240), vec2(40, 64), 2, vec2(20, 32));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdate() {
-  if (gameOver) {
+  if (
+    mouseWasPressed(0) &&
+    (state === State.START_MENU || state === State.GAME_OVER_MENU)
+  ) {
+    if (state == State.GAME_OVER_MENU) {
+      for (const angel of angels) {
+        angel.destroy();
+      }
+      angels = [];
+
+      for (const soul of souls) {
+        soul.destroy();
+      }
+      souls = [];
+
+      lastRoundStartedAt = time;
+      lastSoulAddedAt = 0;
+      lastAngelAddedAt = 0;
+
+      score = 0;
+    }
+
+    state = State.GAME;
+
+    document.querySelector("body").style.cursor = "none";
+  }
+
+  if (state !== State.GAME) {
     return;
   }
+
+  const relativeTime = time - lastRoundStartedAt;
 
   if (mousePosScreen.x) {
     death.velocity = mousePos.subtract(death.pos);
@@ -89,7 +124,7 @@ function gameUpdate() {
 
       angel.applyAcceleration(acceleration);
 
-      const angelMaxSpeed = 5 + (clamp(time, 0, 60) / 60) * 5;
+      const angelMaxSpeed = 5 + (clamp(relativeTime, 0, 60) / 60) * 5;
       angel.velocity = angel.velocity.clampLength(angelMaxSpeed);
     }
 
@@ -113,12 +148,12 @@ function gameUpdate() {
         soulsToRemove.add(soul);
 
         clearAngelTargetSouls();
-
-        score -= 10;
       }
 
       if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
-        gameOver = true;
+        state = State.GAME_OVER_MENU;
+
+        document.querySelector("body").style.cursor = "inherit";
 
         death.velocity = vec2(0, 0);
 
@@ -156,9 +191,9 @@ function gameUpdate() {
     }
   }
 
-  const soulAddInterval = 0.5 - (clamp(time, 0, 60) / 60) * 0.25;
+  const soulAddInterval = 0.5 - (clamp(relativeTime, 0, 60) / 60) * 0.25;
 
-  if (time - lastSoulAddedAt > soulAddInterval) {
+  if (souls.length === 0 || relativeTime - lastSoulAddedAt > soulAddInterval) {
     let position;
 
     const direction = randInt(0, 4);
@@ -179,14 +214,14 @@ function gameUpdate() {
         console.error(`Wasn't expecting ${direction}`);
     }
 
-    const speed = 2 + (clamp(time, 0, 60) / 60) * 3;
+    const speed = 2 + (clamp(relativeTime, 0, 60) / 60) * 3;
 
     souls.push(new SoulObject(position, direction, speed));
 
-    lastSoulAddedAt = time;
+    lastSoulAddedAt = relativeTime;
   }
 
-  if (time - lastAngelAddedAt > 10) {
+  if (angels.length === 0 || relativeTime - lastAngelAddedAt > 10) {
     let angelPos;
     do {
       angelPos = vec2(randInt(0, 640), randInt(0, 480));
@@ -194,7 +229,7 @@ function gameUpdate() {
 
     angels.push(new AngelObject(angelPos));
 
-    lastAngelAddedAt = time;
+    lastAngelAddedAt = relativeTime;
   }
 }
 
@@ -206,10 +241,45 @@ function gameRender() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameRenderPost() {
-  if (gameOver) {
-    drawTextScreen(`Game over.\nFinal score: ${score}`, vec2(600, 400), 12);
-  } else {
-    drawTextScreen(`Score: ${score}`, vec2(600, 400), 12);
+  switch (state) {
+    case State.START_MENU:
+      /**
+       * Soulbusters
+       * Death Cursor
+       * Soulcycle(tm)
+       * The Bad Place
+       */
+      drawTextScreen("Game name TBD", vec2(320, 180), 24);
+      drawTextScreen(
+        `You are Death.\nCollect souls before the angels do. Don't run into the angels.\nClick anywhere to begin.`,
+        vec2(320, 300),
+        12
+      );
+
+      break;
+    case State.GAME:
+      drawTextScreen(
+        `Score: ${score}`,
+        vec2(610, 450),
+        12,
+        new Color(1, 1, 1),
+        0,
+        new Color(),
+        "right",
+        fontDefault
+      );
+      break;
+    case State.GAME_OVER_MENU:
+      drawTextScreen("Game Over", vec2(320, 200), 24);
+
+      drawRectScreenSpace(vec2(320, 310), vec2(200, 60), new Color(0, 0, 0));
+      drawTextScreen(
+        `Final score: ${score}\nHigh score: TBD\nClick anywhere to play again.`,
+        vec2(320, 300),
+        12
+      );
+
+      break;
   }
 }
 
