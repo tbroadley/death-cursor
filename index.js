@@ -68,6 +68,8 @@ function gameUpdate() {
     angel.velocity = angel.velocity.clampLength(angelMaxSpeed);
   }
 
+  angel.pos = vec2(clamp(angel.pos.x, 0, 640), clamp(angel.pos.y, 0, 480));
+
   const soulsToRemove = new Set();
   for (const soul of souls) {
     if (isOverlapping(death.pos, death.size, soul.pos, soul.size)) {
