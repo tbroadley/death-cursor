@@ -32,6 +32,7 @@ class AngelObject extends EngineObject {
 
   constructor(position) {
     super(position, vec2(64, 64), 6, vec2(32, 32));
+    this.setCollision(1, 1, 1);
   }
 }
 
@@ -87,6 +88,19 @@ function gameUpdate() {
     }
 
     angel.pos = vec2(clamp(angel.pos.x, 0, 640), clamp(angel.pos.y, 0, 480));
+
+    for (const angel1 of angels) {
+      for (const angel2 of angels) {
+        if (angel1 === angel2) continue;
+
+        const between = angel1.pos.subtract(angel2.pos);
+        if (between.length() < 32) {
+          const acceleration = between.divide(vec2(2000, 2000));
+          angel1.applyAcceleration(acceleration);
+          angel2.applyAcceleration(acceleration.invert());
+        }
+      }
+    }
   }
 
   const soulsToRemove = new Set();
