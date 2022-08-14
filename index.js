@@ -270,6 +270,7 @@ function gameRenderPost() {
       );
       break;
     case State.GAME_OVER_MENU:
+      drawRectScreenSpace(vec2(320, 200), vec2(200, 60), new Color(0, 0, 0));
       drawTextScreen("Game Over", vec2(320, 200), 24);
 
       drawRectScreenSpace(vec2(320, 310), vec2(200, 60), new Color(0, 0, 0));
