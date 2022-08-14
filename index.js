@@ -168,6 +168,10 @@ function gameUpdate() {
     state = State.GAME;
 
     document.querySelector("body").style.cursor = "none";
+
+    if (!musicSource) {
+      musicSource = music.play(0.75);
+    }
   }
 
   if (state !== State.GAME) {
@@ -238,6 +242,9 @@ function gameUpdate() {
         state = State.GAME_OVER_MENU;
 
         explosionSound.play();
+
+        musicSource?.stop();
+        musicSource = null;
 
         document.querySelector("body").style.cursor = "inherit";
 
