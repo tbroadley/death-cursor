@@ -58,7 +58,7 @@ function gameUpdate() {
   if (lastMousePos) {
     const mouseMovement = mousePos.subtract(lastMousePos);
 
-    if (mouseMovement.length() === 0) {
+    if (mouseMovement.length() < 2) {
       deathCursor.tileIndex = 2;
     } else {
       deathCursor.tileIndex = mouseMovement.direction();
@@ -67,7 +67,9 @@ function gameUpdate() {
 
   lastMousePos = mousePos;
 
-  if (time - lastSoulAddedAt > 1) {
+  const soulAddInterval = 1 - (clamp(time, 0, 60) / 60) * 0.5;
+
+  if (time - lastSoulAddedAt > soulAddInterval) {
     let position;
 
     const direction = randInt(0, 4);
