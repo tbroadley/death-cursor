@@ -11,7 +11,6 @@
 let death;
 
 let angel;
-let angelTargetSoul;
 
 let lastSoulAddedAt = 0;
 
@@ -23,6 +22,14 @@ class SoulObject extends EngineObject {
     super(startingPos, vec2(32, 32), 32, vec2(16, 16));
     this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
     this.damping = 1;
+  }
+}
+
+class AngelObject extends EngineObject {
+  targetSoul = null;
+
+  constructor(position, size, tileIndex, tileSize) {
+    super(position, size, tileIndex, tileSize);
   }
 }
 
@@ -49,16 +56,16 @@ function gameInit() {
 function gameUpdate() {
   death.velocity = mousePos.subtract(death.pos);
 
-  if (!angelTargetSoul && souls.length > 0) {
+  if (!angel.targetSoul && souls.length > 0) {
     // Go for the closest soul
-    angelTargetSoul = souls.sort(
+    angel.targetSoul = souls.sort(
       (a, b) =>
         angel.pos.subtract(a.pos).length() - angel.pos.subtract(b.pos).length()
     )[0];
   }
 
-  if (angelTargetSoul) {
-    const acceleration = angelTargetSoul.pos
+  if (angel.targetSoul) {
+    const acceleration = angel.targetSoul.pos
       .subtract(angel.pos)
       .divide(vec2(1000, 1000));
 
@@ -75,14 +82,14 @@ function gameUpdate() {
     if (isOverlapping(death.pos, death.size, soul.pos, soul.size)) {
       soul.destroy();
       soulsToRemove.add(soul);
-      angelTargetSoul = null;
+      angel.targetSoul = null;
       score += 10;
     }
 
     if (isOverlapping(angel.pos, angel.size, soul.pos, soul.size)) {
       soul.destroy();
       soulsToRemove.add(soul);
-      angelTargetSoul = null;
+      angel.targetSoul = null;
       score -= 10;
     }
 
