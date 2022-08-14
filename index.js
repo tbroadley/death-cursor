@@ -8,12 +8,11 @@
 //onerror = (...parameters)=> alert(parameters);
 
 // game variables
-let deathCursor;
+let death;
 
 let angel;
 let angelTargetSoul;
 
-let lastMousePos;
 let lastSoulAddedAt = 0;
 
 let souls = [];
@@ -34,35 +33,44 @@ function gameInit() {
   cameraPos = vec2(320, 240);
   cameraScale = 1;
 
-  objectMaxSpeed = 5;
+  objectMaxSpeed = 20;
 
-  deathCursor = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
+  death = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
 
-  angel = new EngineObject(vec2(320, 240), vec2(64, 64), 6, vec2(32, 32));
+  angel = new EngineObject(
+    vec2(640 - 100, 480 - 100),
+    vec2(64, 64),
+    6,
+    vec2(32, 32)
+  );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdate() {
-  if (mousePosScreen.x) deathCursor.pos = mousePos;
+  death.velocity = mousePos.subtract(death.pos);
 
-  console.log(angelTargetSoul);
   if (!angelTargetSoul && souls.length > 0) {
     // Go for the closest soul
     angelTargetSoul = souls.sort(
       (a, b) =>
-        angel.pos.subtract(b.pos).length() - angel.pos.subtract(a.pos).length()
+        angel.pos.subtract(a.pos).length() - angel.pos.subtract(b.pos).length()
     )[0];
   }
 
   if (angelTargetSoul) {
-    angel.applyAcceleration(
-      angelTargetSoul.pos.subtract(angel.pos).divide(vec2(10, 10))
-    );
+    const acceleration = angelTargetSoul.pos
+      .subtract(angel.pos)
+      .divide(vec2(1000, 1000));
+
+    angel.applyAcceleration(acceleration);
+
+    const angelMaxSpeed = 5 + (clamp(time, 0, 60) / 60) * 5;
+    angel.velocity = angel.velocity.clampLength(angelMaxSpeed);
   }
 
   const soulsToRemove = new Set();
   for (const soul of souls) {
-    if (isOverlapping(deathCursor.pos, deathCursor.size, soul.pos, soul.size)) {
+    if (isOverlapping(death.pos, death.size, soul.pos, soul.size)) {
       soul.destroy();
       soulsToRemove.add(soul);
       angelTargetSoul = null;
@@ -76,10 +84,8 @@ function gameUpdate() {
       score -= 10;
     }
 
-    if (
-      isOverlapping(deathCursor.pos, deathCursor.size, angel.pos, angel.size)
-    ) {
-      throw new Error("Game over");
+    if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
+      paused = true;
     }
 
     if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
@@ -90,17 +96,17 @@ function gameUpdate() {
 
   souls = souls.filter((it) => !soulsToRemove.has(it));
 
-  if (lastMousePos) {
-    const mouseMovement = mousePos.subtract(lastMousePos);
-
-    if (mouseMovement.length() < 2) {
-      deathCursor.tileIndex = 2;
-    } else {
-      deathCursor.tileIndex = mouseMovement.direction();
-    }
+  if (death.velocity.length() < 1) {
+    death.tileIndex = 2;
+  } else {
+    death.tileIndex = death.velocity.direction();
   }
 
-  lastMousePos = mousePos;
+  if (angel.velocity.length() < 1) {
+    angel.tileIndex = 6;
+  } else {
+    angel.tileIndex = angel.velocity.direction() + 4;
+  }
 
   const soulAddInterval = 1 - (clamp(time, 0, 60) / 60) * 0.5;
 
