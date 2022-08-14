@@ -9,7 +9,10 @@
 
 // game variables
 let deathCursor;
+
 let angel;
+let angelTargetSoul;
+
 let lastMousePos;
 let lastSoulAddedAt = 0;
 
@@ -42,12 +45,41 @@ function gameInit() {
 function gameUpdate() {
   if (mousePosScreen.x) deathCursor.pos = mousePos;
 
+  console.log(angelTargetSoul);
+  if (!angelTargetSoul && souls.length > 0) {
+    // Go for the closest soul
+    angelTargetSoul = souls.sort(
+      (a, b) =>
+        angel.pos.subtract(b.pos).length() - angel.pos.subtract(a.pos).length()
+    )[0];
+  }
+
+  if (angelTargetSoul) {
+    angel.applyAcceleration(
+      angelTargetSoul.pos.subtract(angel.pos).divide(vec2(10, 10))
+    );
+  }
+
   const soulsToRemove = new Set();
   for (const soul of souls) {
     if (isOverlapping(deathCursor.pos, deathCursor.size, soul.pos, soul.size)) {
       soul.destroy();
       soulsToRemove.add(soul);
+      angelTargetSoul = null;
       score += 10;
+    }
+
+    if (isOverlapping(angel.pos, angel.size, soul.pos, soul.size)) {
+      soul.destroy();
+      soulsToRemove.add(soul);
+      angelTargetSoul = null;
+      score -= 10;
+    }
+
+    if (
+      isOverlapping(deathCursor.pos, deathCursor.size, angel.pos, angel.size)
+    ) {
+      throw new Error("Game over");
     }
 
     if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
