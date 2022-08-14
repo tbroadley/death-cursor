@@ -322,8 +322,18 @@ function gameUpdate() {
     }
 
     const speed = 2 + (relativeTime / 60) * 3;
+    const soul = new SoulObject(position, direction, speed);
+    souls.push(soul);
 
-    souls.push(new SoulObject(position, direction, speed));
+    const angelTargets = new Set();
+    for (const angel of angels) {
+      if (angelTargets.has(angel.targetSoul)) {
+        angel.targetSoul = soul;
+        break;
+      }
+
+      angelTargets.add(angel.targetSoul);
+    }
 
     lastSoulAddedAt = relativeTime;
   }
