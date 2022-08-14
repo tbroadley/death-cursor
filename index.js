@@ -9,7 +9,9 @@
 
 // game variables
 let death;
+
 let angels = [];
+let lastAngelAddedAt = 0;
 
 let souls = [];
 let lastSoulAddedAt = 0;
@@ -28,8 +30,8 @@ class SoulObject extends EngineObject {
 class AngelObject extends EngineObject {
   targetSoul = null;
 
-  constructor(position, size, tileIndex, tileSize) {
-    super(position, size, tileIndex, tileSize);
+  constructor(position) {
+    super(position, vec2(64, 64), 6, vec2(32, 32));
   }
 }
 
@@ -50,9 +52,7 @@ function gameInit() {
 
   death = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
 
-  angels.push(
-    new EngineObject(vec2(640 - 100, 480 - 100), vec2(64, 64), 6, vec2(32, 32))
-  );
+  angels.push(new AngelObject(vec2(640 - 100, 480 - 100)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,6 +178,13 @@ function gameUpdate() {
     souls.push(new SoulObject(position, direction, speed));
 
     lastSoulAddedAt = time;
+  }
+
+  if (time - lastAngelAddedAt > 10) {
+    const angelPos = death.pos.add(vec2(200, 200));
+    angels.push(new AngelObject(angelPos));
+
+    lastAngelAddedAt = time;
   }
 }
 
