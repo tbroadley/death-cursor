@@ -15,7 +15,7 @@ let lastMousePos;
 function gameInit() {
   canvasFixedSize = vec2(640, 480);
 
-  deathCursor = new EngineObject(mousePos, vec2(2, 2), 0, vec2(32, 32));
+  deathCursor = new EngineObject(mousePos, vec2(4, 4), 0, vec2(32, 32));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,8 +24,6 @@ function gameUpdate() {
 
   if (lastMousePos) {
     const mouseMovement = mousePos.subtract(lastMousePos);
-
-    console.log(mouseMovement.length());
 
     if (mouseMovement.length() < 0.1) {
       deathCursor.tileIndex = 2;
