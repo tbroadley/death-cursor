@@ -19,7 +19,6 @@ class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
     super(startingPos, vec2(32, 32), 16, vec2(16, 16));
     this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
-    console.log(this.velocity);
     this.damping = 1;
   }
 }
@@ -46,6 +45,11 @@ function gameUpdate() {
       soul.destroy();
       soulsToRemove.add(soul);
       score += 10;
+    }
+
+    if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
+      soul.destroy();
+      soulsToRemove.add(soul);
     }
   }
 
@@ -85,7 +89,6 @@ function gameUpdate() {
     }
 
     const speed = 2 + (clamp(time, 0, 60) / 60) * 3;
-    console.log(speed);
 
     souls.push(new SoulObject(position, direction, speed));
 
