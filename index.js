@@ -7,6 +7,50 @@
 // popup errors if there are any (help diagnose issues on mobile devices)
 //onerror = (...parameters)=> alert(parameters);
 
+const deathSoulPickupSound = new Sound([
+  1,
+  0.05,
+  1874,
+  0.02,
+  0.02,
+  0.17,
+  1,
+  1.1,
+  ,
+  -0.1,
+  ,
+  0.02,
+  ,
+  0.1,
+  ,
+  ,
+  ,
+  0.85,
+  0.04,
+]);
+
+const angelSoulPickupSound = new Sound([
+  1,
+  0.05,
+  383,
+  0.02,
+  0.02,
+  0.17,
+  1,
+  1.1,
+  ,
+  -0.1,
+  -90,
+  0.06,
+  ,
+  0.1,
+  ,
+  ,
+  ,
+  0.85,
+  0.04,
+]);
+
 // game variables
 let death;
 
@@ -141,6 +185,8 @@ function gameUpdate() {
 
       clearAngelTargetSouls(soul);
 
+      deathSoulPickupSound.play();
+
       score += 10;
     }
 
@@ -150,6 +196,8 @@ function gameUpdate() {
         soulsToRemove.add(soul);
 
         clearAngelTargetSouls(soul);
+
+        angelSoulPickupSound.play();
       }
 
       if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
