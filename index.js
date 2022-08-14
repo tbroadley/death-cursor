@@ -51,6 +51,29 @@ const angelSoulPickupSound = new Sound([
   0.04,
 ]);
 
+const explosionSound = new Sound([
+  1.4,
+  ,
+  865,
+  0.04,
+  0.14,
+  0.51,
+  1,
+  3.33,
+  0.9,
+  ,
+  ,
+  ,
+  0.07,
+  0.5,
+  -5.4,
+  0.3,
+  ,
+  0.43,
+  0.1,
+  0.15,
+]);
+
 // game variables
 let death;
 
@@ -202,6 +225,8 @@ function gameUpdate() {
 
       if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
         state = State.GAME_OVER_MENU;
+
+        explosionSound.play();
 
         document.querySelector("body").style.cursor = "inherit";
 
