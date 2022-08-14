@@ -258,6 +258,11 @@ function gameUpdate() {
           soul.velocity = vec2(0, 0);
         }
 
+        localStorage.tbroadleyJs13kGamesHighScore = max(
+          localStorage.tbroadleyJs13kGamesHighScore ?? 0,
+          score
+        );
+
         return;
       }
     }
@@ -370,7 +375,7 @@ function gameRenderPost() {
 
       drawRectScreenSpace(vec2(320, 310), vec2(200, 60), new Color(0, 0, 0));
       drawTextScreen(
-        `Final score: ${score}\nHigh score: TBD\nClick anywhere to play again.`,
+        `Final score: ${score}\nHigh score: ${localStorage.tbroadleyJs13kGamesHighScore}\nClick anywhere to play again.`,
         vec2(320, 300),
         12
       );
