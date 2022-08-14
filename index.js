@@ -51,6 +51,29 @@ const angelSoulPickupSound = new Sound([
   0.04,
 ]);
 
+const angelSpawnSound = new Sound([
+  1,
+  0,
+  293.6648,
+  0.03,
+  0.14,
+  0.13,
+  2,
+  1.3,
+  ,
+  ,
+  ,
+  ,
+  0.08,
+  ,
+  580,
+  ,
+  0.01,
+  0.42,
+  0.1,
+  0.17,
+]);
+
 const explosionSound = new Sound([
   1.4,
   ,
@@ -344,6 +367,10 @@ function gameUpdate() {
     } while (death.pos.subtract(angelPos).length() < 400);
 
     angels.push(new AngelObject(angelPos));
+
+    if (angels.length > 1) {
+      angelSpawnSound.play(null, 0.5);
+    }
 
     lastAngelAddedAt = relativeTime;
   }
