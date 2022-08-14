@@ -248,6 +248,8 @@ function gameUpdate() {
     if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
       soul.destroy();
       soulsToRemove.add(soul);
+
+      clearAngelTargetSouls(soul);
     }
   }
 
