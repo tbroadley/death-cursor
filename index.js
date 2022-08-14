@@ -9,6 +9,7 @@
 
 // game variables
 let deathCursor;
+let angel;
 let lastMousePos;
 let lastSoulAddedAt = 0;
 
@@ -17,7 +18,7 @@ let score = 0;
 
 class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
-    super(startingPos, vec2(32, 32), 16, vec2(16, 16));
+    super(startingPos, vec2(32, 32), 32, vec2(16, 16));
     this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
     this.damping = 1;
   }
@@ -33,6 +34,8 @@ function gameInit() {
   objectMaxSpeed = 5;
 
   deathCursor = new EngineObject(mousePos, vec2(64, 64), 2, vec2(32, 32));
+
+  angel = new EngineObject(vec2(320, 240), vec2(64, 64), 6, vec2(32, 32));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
