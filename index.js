@@ -127,9 +127,8 @@ function gameUpdate() {
         }
 
         for (const soul of souls) {
-          soul.destroy();
+          soul.velocity = vec2(0, 0);
         }
-        souls = [];
 
         return;
       }
