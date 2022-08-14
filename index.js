@@ -23,7 +23,6 @@ class SoulObject extends EngineObject {
   constructor(startingPos, direction, speed) {
     super(startingPos, vec2(32, 32), 32, vec2(16, 16));
     this.velocity = vec2(0, speed).rotate((Math.PI / 2) * direction);
-    this.damping = 1;
   }
 }
 
@@ -88,19 +87,6 @@ function gameUpdate() {
     }
 
     angel.pos = vec2(clamp(angel.pos.x, 0, 640), clamp(angel.pos.y, 0, 480));
-
-    for (const angel1 of angels) {
-      for (const angel2 of angels) {
-        if (angel1 === angel2) continue;
-
-        const between = angel1.pos.subtract(angel2.pos);
-        if (between.length() < 32) {
-          const acceleration = between.divide(vec2(2000, 2000));
-          angel1.applyAcceleration(acceleration);
-          angel2.applyAcceleration(acceleration.invert());
-        }
-      }
-    }
   }
 
   const soulsToRemove = new Set();
@@ -164,7 +150,7 @@ function gameUpdate() {
     }
   }
 
-  const soulAddInterval = 1 - (clamp(time, 0, 60) / 60) * 0.5;
+  const soulAddInterval = 0.5 - (clamp(time, 0, 60) / 60) * 0.25;
 
   if (time - lastSoulAddedAt > soulAddInterval) {
     let position;
