@@ -204,12 +204,11 @@ function gameUpdate() {
     if (angel.targetSoul) {
       const acceleration = angel.targetSoul.pos
         .subtract(angel.pos)
-        .divide(vec2(1000, 1000));
+        .divide(vec2(2000, 2000));
 
       angel.applyAcceleration(acceleration);
 
-      const angelMaxSpeed = 5 + (relativeTime / 60) * 5;
-      angel.velocity = angel.velocity.clampLength(angelMaxSpeed);
+      angel.velocity = angel.velocity.clampLength(5);
     }
 
     angel.pos = vec2(clamp(angel.pos.x, 0, 640), clamp(angel.pos.y, 0, 480));
