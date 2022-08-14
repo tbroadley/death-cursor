@@ -187,7 +187,11 @@ function gameUpdate() {
   }
 
   if (time - lastAngelAddedAt > 10) {
-    const angelPos = death.pos.add(vec2(200, 200));
+    let angelPos;
+    do {
+      angelPos = vec2(randInt(0, 640), randInt(0, 480));
+    } while (death.pos.subtract(angelPos).length() < 400);
+
     angels.push(new AngelObject(angelPos));
 
     lastAngelAddedAt = time;
