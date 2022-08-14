@@ -238,7 +238,14 @@ function gameUpdate() {
         angelSoulPickupSound.play();
       }
 
-      if (isOverlapping(death.pos, death.size, angel.pos, angel.size)) {
+      if (
+        isOverlapping(
+          death.pos,
+          death.size.subtract(vec2(20, 20)),
+          angel.pos,
+          angel.size
+        )
+      ) {
         state = State.GAME_OVER_MENU;
 
         explosionSound.play();
