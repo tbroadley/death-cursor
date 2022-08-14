@@ -208,7 +208,7 @@ function gameUpdate() {
 
       angel.applyAcceleration(acceleration);
 
-      const angelMaxSpeed = 5 + (clamp(relativeTime, 0, 60) / 60) * 5;
+      const angelMaxSpeed = 5 + (relativeTime / 60) * 5;
       angel.velocity = angel.velocity.clampLength(angelMaxSpeed);
     }
 
@@ -309,7 +309,7 @@ function gameUpdate() {
         console.error(`Wasn't expecting ${direction}`);
     }
 
-    const speed = 2 + (clamp(relativeTime, 0, 60) / 60) * 3;
+    const speed = 2 + (relativeTime / 60) * 3;
 
     souls.push(new SoulObject(position, direction, speed));
 
