@@ -176,14 +176,15 @@ function gameUpdate() {
         angels.map((it) => it.targetSoul).filter((it) => !!it)
       );
 
-      // Go for the closest soul that isn't already the target of a different angel
-      angel.targetSoul = souls
-        .sort(
-          (a, b) =>
-            angel.pos.subtract(a.pos).length() -
-            angel.pos.subtract(b.pos).length()
-        )
-        .find((it) => !existingTargetSouls.has(it));
+      const soulsByDistance = souls.sort(
+        (a, b) =>
+          angel.pos.subtract(a.pos).length() -
+          angel.pos.subtract(b.pos).length()
+      );
+
+      angel.targetSoul =
+        soulsByDistance.find((it) => !existingTargetSouls.has(it)) ??
+        soulsByDistance[0];
     }
 
     if (angel.targetSoul) {
