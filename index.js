@@ -136,8 +136,6 @@ class SoulObject extends EngineObject {
 }
 
 class AngelObject extends EngineObject {
-  targetSoul = null;
-
   constructor(position) {
     super(position, vec2(40, 64), 6, vec2(20, 32));
     this.setCollision(1, 1, 1);
