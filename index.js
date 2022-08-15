@@ -107,6 +107,13 @@ document.addEventListener("click", () => {
   musicSource = music.play(0.75);
 });
 
+function updateHighScore(score) {
+  localStorage.tbroadleyJs13kGamesHighScore = max(
+    localStorage.tbroadleyJs13kGamesHighScore ?? 0,
+    score
+  );
+}
+
 // game variables
 let death;
 
@@ -119,6 +126,7 @@ let lastSoulAddedAt = 0;
 let lastRoundStartedAt = 0;
 
 let score = 0;
+updateHighScore(score);
 
 const State = {
   START_MENU: "START_MENU",
@@ -246,6 +254,7 @@ function gameUpdate() {
       deathSoulPickupSound.play();
 
       score += 10;
+      updateHighScore(score);
     }
 
     for (const angel of angels) {
@@ -284,11 +293,6 @@ function gameUpdate() {
         for (const soul of souls) {
           soul.velocity = vec2(0, 0);
         }
-
-        localStorage.tbroadleyJs13kGamesHighScore = max(
-          localStorage.tbroadleyJs13kGamesHighScore ?? 0,
-          score
-        );
 
         return;
       }
