@@ -6,12 +6,11 @@
   "author": "Thomas Broadley <buriedunderbooks@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "yarn js13k-packer index.html dist --pack false; cp tiles.png dist/tiles.png && zip dist/dist.zip dist/index.html dist/tiles.png && yarn js13k-packer index.html dist --bundle false --minify false --pack false",
-    "unzip": "unzip -o dist/dist.zip"
+    "build": "./build.bash",
+    "unzip": "unzip -o dist/dist.zip -d dist"
   },
   "devDependencies": {
     "husky": "^8.0.1",
-    "js13k-packer": "^1.0.2",
     "prettier": "^2.7.1",
     "pretty-quick": "^3.1.3"
   }
