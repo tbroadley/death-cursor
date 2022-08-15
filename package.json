@@ -5,8 +5,12 @@
   "repository": "git@github.com:tbroadley/js13kGames-2022.git",
   "author": "Thomas Broadley <buriedunderbooks@hotmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "js13k-packer index.html dist"
+  },
   "devDependencies": {
     "husky": "^8.0.1",
+    "js13k-packer": "^1.0.2",
     "prettier": "^2.7.1",
     "pretty-quick": "^3.1.3"
   }
