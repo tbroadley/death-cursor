@@ -6,7 +6,7 @@
   "author": "Thomas Broadley <buriedunderbooks@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "yarn js13k-packer index.html dist; zip dist/dist.zip dist/index.html && yarn js13k-packer index.html dist --bundle false --minify false --pack false"
+    "build": "yarn js13k-packer index.html dist --pack false; cp tiles.png dist/tiles.png && zip dist/dist.zip dist/index.html dist/tiles.png && yarn js13k-packer index.html dist --bundle false --minify false --pack false"
   },
   "devDependencies": {
     "husky": "^8.0.1",
