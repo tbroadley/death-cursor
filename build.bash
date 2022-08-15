@@ -16,7 +16,9 @@ yarn google-closure-compiler \
 	--warning_level VERBOSE \
 	--jscomp_off '*'
 
-zip --junk-paths dist/dist.zip index.html dist/index.js tiles.png
+sed 's/.*engine.all.js.*//' <index.html >dist/index.html
+
+zip --junk-paths dist/dist.zip dist/index.html dist/index.js tiles.png
 ect -9 -strip -zip dist/dist.zip
 
 rm dist/index.js
