@@ -18,9 +18,9 @@ yarn google-closure-compiler \
 
 sed 's/.*engine.all.js.*//' <index.html >dist/index.html
 
-zip --junk-paths dist/dist.zip dist/index.html dist/index.js tiles.png
+zip --junk-paths dist/dist.zip dist/index.html dist/index.js tiles.png favicon.ico
 ect -9 -strip -zip dist/dist.zip
 
-rm dist/index.js
+rm dist/index.js dist/index.html
 
 ls -l dist
