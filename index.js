@@ -150,7 +150,7 @@ class AngelObject extends EngineObject {
   }
 }
 
-function clearAngelTargetSouls(soul) {
+function removeSoulAsAngelTarget(soul) {
   for (const angel of angels) {
     if (angel.targetSoul === soul) {
       angel.targetSoul = null;
@@ -209,6 +209,7 @@ function gameUpdate() {
 
   const relativeTime = time - lastRoundStartedAt;
 
+  // Move Death towards mouse cursor if it's on the screen
   if (mousePosScreen.x) {
     death.velocity = mousePos.subtract(death.pos);
   }
@@ -231,15 +232,16 @@ function gameUpdate() {
     }
 
     if (angel.targetSoul) {
+      // Accelerate towards target soul
       const acceleration = angel.targetSoul.pos
         .subtract(angel.pos)
         .divide(vec2(2000, 2000));
-
       angel.applyAcceleration(acceleration);
 
       angel.velocity = angel.velocity.clampLength(5);
     }
 
+    // Keep angels onscreen
     angel.pos = vec2(clamp(angel.pos.x, 0, 640), clamp(angel.pos.y, 0, 480));
   }
 
@@ -249,7 +251,7 @@ function gameUpdate() {
       soul.destroy();
       soulsToRemove.add(soul);
 
-      clearAngelTargetSouls(soul);
+      removeSoulAsAngelTarget(soul);
 
       deathSoulPickupSound.play();
 
@@ -262,15 +264,16 @@ function gameUpdate() {
         soul.destroy();
         soulsToRemove.add(soul);
 
-        clearAngelTargetSouls(soul);
+        removeSoulAsAngelTarget(soul);
 
         angelSoulPickupSound.play();
       }
 
+      // TODO move this outside the loop over souls
       if (
         isOverlapping(
           death.pos,
-          death.size.subtract(vec2(20, 20)),
+          death.size.subtract(vec2(20, 20)), // Make Death's hitbox with respect to angels a bit more forgiving
           angel.pos,
           angel.size
         )
@@ -282,6 +285,7 @@ function gameUpdate() {
         musicSource?.stop();
         musicSource = null;
 
+        // Make cursor appear again
         document.querySelector("body").style.cursor = "inherit";
 
         death.velocity = vec2(0, 0);
@@ -298,11 +302,12 @@ function gameUpdate() {
       }
     }
 
+    // Remove souls that are offscreen
     if (!isOverlapping(soul.pos, soul.size, cameraPos, vec2(640, 480))) {
       soul.destroy();
       soulsToRemove.add(soul);
 
-      clearAngelTargetSouls(soul);
+      removeSoulAsAngelTarget(soul);
     }
   }
 
@@ -327,6 +332,7 @@ function gameUpdate() {
   if (souls.length === 0 || relativeTime - lastSoulAddedAt > soulAddInterval) {
     let position;
 
+    // Have the soul start from a random edge of the screen, moving across the screen perpendicular to the edge
     const direction = randInt(0, 4);
     switch (direction) {
       case 0:
@@ -342,13 +348,14 @@ function gameUpdate() {
         position = vec2(0, randInt(0, 480 - 16));
         break;
       default:
-        console.error(`Wasn't expecting ${direction}`);
+        console.error(`Unexpected direction ${direction} when creating a soul`);
     }
 
     const speed = 2 + (relativeTime / 60) * 3;
     const soul = new SoulObject(position, direction, speed);
     souls.push(soul);
 
+    // Find the first angel that shares a target with another angel. Reassign it to target the newly-created soul
     const angelTargets = new Set();
     for (const angel of angels) {
       if (angelTargets.has(angel.targetSoul)) {
@@ -363,6 +370,7 @@ function gameUpdate() {
   }
 
   if (angels.length === 0 || relativeTime - lastAngelAddedAt > 10) {
+    // Spawn the angel on-screen but relatively far away from Death
     let angelPos;
     do {
       angelPos = vec2(randInt(0, 640), randInt(0, 480));
@@ -388,15 +396,6 @@ function gameRender() {}
 function gameRenderPost() {
   switch (state) {
     case State.START_MENU:
-      /**
-       * Soulbusters
-       * Death Cursor
-       * Soulcycle(tm)
-       * The Bad Place
-       * Reaper-off
-       * Reap or Sow
-       * Cursor of Death
-       */
       drawTextScreen("Death Cursor", vec2(320, 180), 24);
       drawTextScreen(
         `You are Death.\nUse your mouse to collect souls before the angels do.\nDon't touch the angels.\nClick anywhere to begin.`,
